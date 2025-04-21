@@ -5,10 +5,11 @@
     <classes>
       <class name="com.OrangeHrm_Bo1_loginPage.BuildBO1_Test">
         <methods>
-          <include name="homePage_Test"/>
-          <include name="signUp_Test"/>
-          <include name="logout_Test"/>
-          <include name="login_Test"/>
+          <include name="login_url"/>
+          <include name="Login_url"/>
+          <include name="colse_Browser"/>
+          <include name="endToend_1_Test"/>
+          <include name="open_Browser"/>
         </methods>
       </class> <!-- com.OrangeHrm_Bo1_loginPage.BuildBO1_Test -->
     </classes>
