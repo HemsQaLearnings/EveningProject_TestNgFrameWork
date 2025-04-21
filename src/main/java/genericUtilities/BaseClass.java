@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -15,6 +16,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
+import org.testng.asserts.SoftAssert;
+
+import pomUtilities.LoginPomPage;
 
 public class BaseClass {
 	
@@ -22,9 +26,12 @@ public class BaseClass {
 	
 	//object creation for webDriverUtils
 	WebDriverUtilities wlib =new WebDriverUtilities();
+	public SoftAssert sf;
+	public LoginPomPage lp;
+	
 	@Parameters({ "browser" })
 	@BeforeClass
-	public void open_Browser(@Optional("chrome") String browser ) 
+	public void open_Browser(@Optional("Chrome") String browser ) 
 	{
 		if(browser.equalsIgnoreCase("Chrome"))
 		{
@@ -48,31 +55,30 @@ public class BaseClass {
 
 	@BeforeMethod
 	public void Login_url() throws InterruptedException {
-		// userName
-		
-		//WebElement usn = driver.findElement(By.xpath("//input[@name='username']"));
-		WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(15));
+		sf = new SoftAssert();
+		lp=new LoginPomPage(driver);
 		Thread.sleep(4000);
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@name='username']"))).sendKeys("Admin");
-	//	wait.until(ExpectedConditions.elementToBeClickable(usn)).sendKeys("Admin");
-		System.out.println("send userName");
+		lp.loginPageImpliment("Admin", "admin");
+		Thread.sleep(2000);
+		driver.navigate().refresh();
 		
-		// password
-		driver.findElement(By.name("password")).sendKeys("admin123");
-		// login
-		System.out.println("send password");
-		driver.findElement(By.xpath("//button[@type='submit']")).click();
+		lp.loginPageImpliment("Admin", "admin123");
+		Thread.sleep(4000);
+		lp.getLogin_btn().click();
+		
 	}
 
 	@AfterMethod
 	public void login_url() {
 		driver.findElement(By.xpath("//i[@class='oxd-icon bi-caret-down-fill oxd-userdropdown-icon']")).click();
 		driver.findElement(By.xpath("//a[text()='Logout']")).click();
+		
 	}
 
 	@AfterClass
 	public void colse_Browser() {
 		driver.quit();
+		sf.assertAll();
 	}
 
 }
